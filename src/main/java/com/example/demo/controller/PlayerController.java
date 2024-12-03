@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +22,11 @@ import com.example.demo.service.PlayerService;
 @RequestMapping("/player")
 public class PlayerController {
 
-    @Autowired
-    PlayerService playerService;
+    private final PlayerService playerService;
+
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
+    }
     
     @GetMapping("/v1/player")
     @ResponseBody
@@ -83,13 +85,14 @@ public class PlayerController {
     }
 
     @PutMapping("/v1/player/{nickname}")
-    public void updatePlayer(@PathVariable String nickName, @RequestParam String email, @RequestParam int level) {
+    public void updatePlayer(@PathVariable String nickname, @RequestParam String email, @RequestParam int level) {
         try {
-            playerService.updatePlayer(nickName, email, level);
+            playerService.updatePlayer(nickname, email, level);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     @PostMapping("/v1/{nickname}")
     public void createPlayer(@PathVariable String nickname, @RequestBody String email) {
