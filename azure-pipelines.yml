@@ -1,0 +1,35 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    jdkArchitectureOption: 'x64'
+    goals: 'package'
+
+- task: Docker@2
+  inputs:
+    command: 'buildAndPush'
+    containerRegistry: 'AzureEciTron'
+    repository: 'ECITronContainerRegistry'
+    dockerfile: '**/Dockerfile'
+    tags: |
+      $(Build.BuildId)
+
+# Paso para desplegar en Azure Container Apps
+- task: AzureContainerApps@1
+  inputs:
+    azureSubscription: 'ecitron' 
+    resourceGroup: 'ECITron'           
+    environmentName: 'ecitron'     
+    appName: 'GameAppECITron'
+    imageName: 'ECITronContainerRegistry:$(Build.BuildId)' 
+    cpu: '2'          
+    memory: '2Gi'      

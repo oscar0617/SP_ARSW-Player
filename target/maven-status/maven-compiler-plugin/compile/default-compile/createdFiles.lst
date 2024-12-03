@@ -1,0 +1,6 @@
+com\example\demo\controller\PlayerController.class
+com\example\demo\model\Player.class
+com\example\demo\repository\PlayerRepository.class
+com\example\demo\DemoApplication.class
+com\example\demo\service\PlayerService.class
+com\example\demo\config\MongoConfig.class
